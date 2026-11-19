@@ -26,7 +26,7 @@ async function getMovieTrailer(movieId) {
 
   const anyTrailer = youtubeVideos.find((video) => video.type === "Trailer");
 
-  // Prefer the official main trailer, then fall back to other trailers.
+  // Prefer the official main trailer, then other trailers.
   return officialTrailer ?? fallbackTrailer ?? anyTrailer ?? null;
 }
 
@@ -36,4 +36,24 @@ async function getTrendingMovies() {
   return data.results;
 }
 
-export { getMovieVideos, getMovieTrailer, getTrendingMovies };
+async function getMovieDetails(movieId) {
+  const data = await tmdbClient(`/movie/${movieId}?language=en-US`);
+
+  return data;
+}
+
+async function getSimilarMovies(movieId) {
+  const data = await tmdbClient(
+    `/movie/${movieId}/similar?language=en-US&page=1`,
+  );
+
+  return data.results;
+}
+
+export {
+  getMovieVideos,
+  getMovieTrailer,
+  getTrendingMovies,
+  getMovieDetails,
+  getSimilarMovies,
+};
