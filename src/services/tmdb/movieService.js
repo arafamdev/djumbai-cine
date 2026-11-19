@@ -30,4 +30,10 @@ async function getMovieTrailer(movieId) {
   return officialTrailer ?? fallbackTrailer ?? anyTrailer ?? null;
 }
 
-export { getMovieVideos, getMovieTrailer };
+async function getTrendingMovies() {
+  const data = await tmdbClient("/trending/movie/week?language=en-US");
+
+  return data.results;
+}
+
+export { getMovieVideos, getMovieTrailer, getTrendingMovies };
