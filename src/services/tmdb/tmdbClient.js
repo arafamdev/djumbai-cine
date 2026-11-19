@@ -4,7 +4,13 @@ async function tmdbClient(endpoint) {
   const response = await fetch(`${API_BASE_URL}${endpoint}`);
 
   if (!response.ok) {
-    throw new Error(`TMDB request failed with status ${response.status}`);
+    const error = new Error(
+      `TMDB request failed with status ${response.status}`,
+    );
+
+    error.status = response.status;
+
+    throw error;
   }
 
   return response.json();
