@@ -6,16 +6,16 @@
 @theme {
   --font-sans: "Manrope", sans-serif;
 
-  --color-background: #0b1120;
-  --color-surface: #111827;
-  --color-elevated: #1f2937;
+  --color-background: #09090b;
+  --color-surface: #141417;
+  --color-elevated: #202024;
 
-  --color-primary: #c83e45;
-  --color-primary-hover: #ad3038;
+  --color-primary: #c4484e;
+  --color-primary-hover: #aa363d;
 
-  --color-foreground: #e5e7eb;
-  --color-muted: #9ca3af;
-  --color-border: #293244;
+  --color-foreground: #f5f5f5;
+  --color-muted: #a1a1aa;
+  --color-border: #27272a;
 }
 
 :root {
