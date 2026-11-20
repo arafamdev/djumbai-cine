@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import MovieCard from "../../features/home/components/MovieCard";
+import MovieCard from "./MovieCard";
 
 function MovieCarousel({ movies, title, titleId }) {
   const carouselRef = useRef(null);

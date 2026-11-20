@@ -50,10 +50,19 @@ async function getSimilarMovies(movieId) {
   return data.results;
 }
 
+async function getPopularMovies(page = 1, signal) {
+  const data = await tmdbClient(`/movie/popular?language=en-US&page=${page}`, {
+    signal,
+  });
+
+  return data;
+}
+
 export {
   getMovieVideos,
   getMovieTrailer,
   getTrendingMovies,
   getMovieDetails,
   getSimilarMovies,
+  getPopularMovies,
 };
