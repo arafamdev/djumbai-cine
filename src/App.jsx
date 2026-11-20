@@ -9,6 +9,7 @@ import MovieDetailsPage from "./features/movies/pages/MovieDetailsPage";
 import ExploreTvShowsPage from "./features/tv/pages/ExploreTvShowsPage";
 import TvShowDetailsPage from "./features/tv/pages/TvShowDetailsPage";
 import ScrollToTop from "./components/layout/ScrollToTop";
+import SearchResultsPage from "./features/search/pages/SearchResultsPage";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/movies/:movieId" element={<MovieDetailsPage />} />
         <Route path="/tv" element={<ExploreTvShowsPage />} />
         <Route path="/tv/:tvShowId" element={<TvShowDetailsPage />} />
+        <Route path="/search" element={<SearchResultsPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
 

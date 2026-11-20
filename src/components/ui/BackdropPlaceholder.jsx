@@ -2,11 +2,13 @@ import { Clapperboard } from "lucide-react";
 
 function BackdropPlaceholder() {
   return (
-    <div className="relative flex aspect-video w-full items-center justify-center overflow-hidden bg-linear-to-br from-elevated via-surface to-background">
+    <div className="relative flex h-72 w-full items-center justify-center overflow-hidden bg-linear-to-br from-elevated via-surface to-background sm:h-96 lg:h-120">
+      {/* Background effects */}
       <div className="absolute -top-24 -right-24 size-80 rounded-full bg-primary/10 blur-3xl" />
 
       <div className="absolute -bottom-24 -left-24 size-80 rounded-full bg-primary/5 blur-3xl" />
 
+      {/* Placeholder content */}
       <div className="relative flex flex-col items-center gap-4 text-center">
         <Clapperboard
           size={56}

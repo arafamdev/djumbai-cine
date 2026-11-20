@@ -7,12 +7,17 @@ import Spinner from "../../../components/ui/Spinner";
 import TrailerModal from "../../../components/ui/TrailerModal";
 import PosterPlaceholder from "../../../components/ui/PosterPlaceholder";
 import BackdropPlaceholder from "../../../components/ui/BackdropPlaceholder";
+import CastSection from "../../../components/ui/CastSection";
 import SimilarMovies from "../components/SimilarMovies";
 
 import {
   getMovieDetails,
   getMovieTrailer,
+  getMovieCredits,
 } from "../../../services/tmdb/movieService";
+
+const MINUTES_PER_HOUR = 60;
+const HTTP_STATUS_NOT_FOUND = 404;
 
 function MovieDetailsPage() {
   const { movieId } = useParams();
@@ -29,6 +34,11 @@ function MovieDetailsPage() {
     trailer: null,
   });
 
+  const [castRequest, setCastRequest] = useState({
+    movieId: null,
+    castMembers: [],
+  });
+
   const [retryCount, setRetryCount] = useState(0);
   const [openTrailerMovieId, setOpenTrailerMovieId] = useState(null);
 
@@ -41,6 +51,9 @@ function MovieDetailsPage() {
   const trailer =
     trailerRequest.movieId === movieId ? trailerRequest.trailer : null;
 
+  const castMembers =
+    castRequest.movieId === movieId ? castRequest.castMembers : [];
+
   function handleRetry() {
     setRequest({
       movieId,
@@ -52,6 +65,11 @@ function MovieDetailsPage() {
     setTrailerRequest({
       movieId: null,
       trailer: null,
+    });
+
+    setCastRequest({
+      movieId: null,
+      castMembers: [],
     });
 
     setOpenTrailerMovieId(null);
@@ -68,10 +86,13 @@ function MovieDetailsPage() {
 
     async function loadMovieDetails() {
       try {
-        const [movieResult, trailerResult] = await Promise.allSettled([
-          getMovieDetails(movieId),
-          getMovieTrailer(movieId),
-        ]);
+        // Load optional content without blocking the movie details.
+        const [movieResult, trailerResult, castResult] =
+          await Promise.allSettled([
+            getMovieDetails(movieId),
+            getMovieTrailer(movieId),
+            getMovieCredits(movieId),
+          ]);
 
         if (!isActive) return;
 
@@ -83,6 +104,12 @@ function MovieDetailsPage() {
           movieId,
           trailer:
             trailerResult.status === "fulfilled" ? trailerResult.value : null,
+        });
+
+        setCastRequest({
+          movieId,
+          castMembers:
+            castResult.status === "fulfilled" ? castResult.value : [],
         });
 
         setRequest({
@@ -100,7 +127,7 @@ function MovieDetailsPage() {
           error: {
             status: error.status,
             message:
-              error.status === 404
+              error.status === HTTP_STATUS_NOT_FOUND
                 ? "The movie you're looking for doesn't exist."
                 : "We couldn't load this movie. Please try again.",
           },
@@ -127,7 +154,7 @@ function MovieDetailsPage() {
   if (error) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-background px-6 pt-20">
-        {error.status === 404 ? (
+        {error.status === HTTP_STATUS_NOT_FOUND ? (
           <ErrorState
             title="Movie not found"
             message={error.message}
@@ -167,27 +194,37 @@ function MovieDetailsPage() {
 
   const genres = movie.genres?.map((genre) => genre.name).join(" · ");
 
-  const hours = Math.floor((movie.runtime ?? 0) / 60);
-  const minutes = (movie.runtime ?? 0) % 60;
+  const runtimeInMinutes = movie.runtime ?? 0;
 
-  const runtime = movie.runtime ? `${hours}h ${minutes}m` : "Unknown";
+  const runtimeHours = Math.floor(runtimeInMinutes / MINUTES_PER_HOUR);
+  const remainingMinutes = runtimeInMinutes % MINUTES_PER_HOUR;
+
+  const formattedRuntime = movie.runtime
+    ? `${runtimeHours}h ${remainingMinutes}m`
+    : "Unknown";
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      {/* Movie backdrop */}
+      {/* Media backdrop */}
       <section className="relative w-full overflow-hidden bg-background">
         {backdropUrl ? (
-          <img src={backdropUrl} alt="" className="block h-auto w-full" />
+          <img
+            src={backdropUrl}
+            alt=""
+            className="block h-72 w-full object-cover object-center sm:h-96 lg:h-170"
+          />
         ) : (
           <BackdropPlaceholder />
         )}
 
+        {/* Backdrop gradient */}
         <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-background via-background/20 to-transparent" />
       </section>
 
       {/* Movie information */}
       <section className="relative mx-auto -mt-28 max-w-7xl px-6 pb-20 md:-mt-40">
         <div className="grid gap-8 md:grid-cols-[240px_1fr]">
+          {/* Movie poster */}
           <div>
             {posterUrl ? (
               <img
@@ -200,13 +237,15 @@ function MovieDetailsPage() {
             )}
           </div>
 
+          {/* Movie details */}
           <div className="space-y-5">
             <h1 className="text-3xl font-bold md:text-5xl">{movie.title}</h1>
 
+            {/* Movie metadata */}
             <div className="flex flex-wrap items-center gap-3 text-sm text-muted">
               <span>{releaseYear}</span>
               <span aria-hidden="true">·</span>
-              <span>{runtime}</span>
+              <span>{formattedRuntime}</span>
 
               {movie.vote_count > 0 && (
                 <>
@@ -220,6 +259,7 @@ function MovieDetailsPage() {
 
             {genres && <p className="text-sm text-muted">{genres}</p>}
 
+            {/* Trailer button */}
             {trailer && (
               <button
                 type="button"
@@ -231,6 +271,7 @@ function MovieDetailsPage() {
               </button>
             )}
 
+            {/* Movie overview */}
             <div className="max-w-3xl space-y-3">
               <h2 className="text-xl font-semibold">Overview</h2>
 
@@ -242,10 +283,10 @@ function MovieDetailsPage() {
         </div>
       </section>
 
-      {/* Similar movies */}
+      <CastSection castMembers={castMembers} />
+
       <SimilarMovies movieId={movieId} />
 
-      {/* Movie trailer */}
       {openTrailerMovieId === movieId && trailer && (
         <TrailerModal trailer={trailer} onClose={handleCloseTrailer} />
       )}

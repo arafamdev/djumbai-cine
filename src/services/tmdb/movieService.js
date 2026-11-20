@@ -58,6 +58,14 @@ async function getPopularMovies(page = 1, signal) {
   return data;
 }
 
+async function getMovieCredits(movieId) {
+  const movieCredits = await tmdbClient(
+    `/movie/${movieId}/credits?language=en-US`,
+  );
+
+  return movieCredits.cast;
+}
+
 export {
   getMovieVideos,
   getMovieTrailer,
@@ -65,4 +73,5 @@ export {
   getMovieDetails,
   getSimilarMovies,
   getPopularMovies,
+  getMovieCredits,
 };
