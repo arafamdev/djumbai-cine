@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 
+import Footer from "./components/layout/Footer";
 import Header from "./components/layout/Header";
 import ExploreMoviesPage from "./features/explore/pages/ExploreMoviesPage";
 import NotFoundPage from "./features/errors/pages/NotFoundPage";
@@ -17,6 +18,8 @@ function App() {
         <Route path="/movies/:movieId" element={<MovieDetailsPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+
+      <Footer />
     </>
   );
 }
