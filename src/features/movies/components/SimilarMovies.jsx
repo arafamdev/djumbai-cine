@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import MovieCarousel from "../../../components/ui/MovieCarousel";
+import MediaCarousel from "../../../components/ui/MediaCarousel";
 import Spinner from "../../../components/ui/Spinner";
 import { getSimilarMovies } from "../../../services/tmdb/movieService";
 
@@ -87,7 +87,7 @@ function SimilarMovies({ movieId }) {
   }
 
   return (
-    <MovieCarousel
+    <MediaCarousel
       movies={movies}
       title="You May Also Like"
       titleId="similar-movies-title"

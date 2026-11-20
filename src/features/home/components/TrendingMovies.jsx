@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import MovieCarousel from "../../../components/ui/MovieCarousel";
+import MediaCarousel from "../../../components/ui/MediaCarousel";
 import Spinner from "../../../components/ui/Spinner";
 import { getTrendingMovies } from "../../../services/tmdb/movieService";
 
@@ -72,7 +72,7 @@ function TrendingMovies() {
   }
 
   return (
-    <MovieCarousel
+    <MediaCarousel
       movies={movies}
       title="Trending Movies"
       titleId="trending-movies-title"

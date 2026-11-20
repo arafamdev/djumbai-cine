@@ -1,14 +1,14 @@
 import { useSearchParams } from "react-router-dom";
 
-import MovieGrid from "../../../components/ui/MovieGrid";
+import MediaGrid from "../../../components/ui/MediaGrid";
 import Pagination from "../../../components/ui/Pagination";
 import Spinner from "../../../components/ui/Spinner";
-import usePopularMovies from "../hooks/usePopularMovies";
+import usePopularTvShows from "../hooks/usePopularTvShows";
 
 const MIN_PAGE = 1;
 const MAX_TMDB_PAGE = 500;
 
-function ExploreMoviesPage() {
+function ExploreTvShowsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const pageParam = searchParams.get("page");
@@ -23,8 +23,8 @@ function ExploreMoviesPage() {
 
   const currentPage = isValidPage ? requestedPage : MIN_PAGE;
 
-  const { movies, totalPages, isLoading, error } =
-    usePopularMovies(currentPage);
+  const { tvShows, totalPages, isLoading, error } =
+    usePopularTvShows(currentPage);
 
   const availablePages = Math.min(totalPages, MAX_TMDB_PAGE);
 
@@ -37,27 +37,22 @@ function ExploreMoviesPage() {
     }
 
     setSearchParams({ page: String(selectedPage) });
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
   }
 
   return (
     <main className="min-h-screen bg-background px-6 pb-20 pt-32">
       <div className="mx-auto max-w-7xl">
         <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-          Explore Movies
+          Explore TV Shows
         </h1>
 
         <p className="mt-3 max-w-2xl text-sm leading-7 text-muted sm:text-base">
-          Discover movies, explore genres, and find your next favorite film.
+          Discover popular TV shows and find your next favorite series.
         </p>
 
         {isLoading && (
           <div className="flex min-h-64 items-center justify-center">
-            <Spinner label="Loading movies..." size="lg" />
+            <Spinner label="Loading TV shows..." size="lg" />
           </div>
         )}
 
@@ -67,13 +62,13 @@ function ExploreMoviesPage() {
           </p>
         )}
 
-        {!isLoading && !error && movies.length === 0 && (
-          <p className="mt-8 text-sm text-muted">No movies available.</p>
+        {!isLoading && !error && tvShows.length === 0 && (
+          <p className="mt-8 text-sm text-muted">No TV shows available.</p>
         )}
 
-        {!isLoading && !error && movies.length > 0 && (
+        {!isLoading && !error && tvShows.length > 0 && (
           <>
-            <MovieGrid movies={movies} />
+            <MediaGrid movies={tvShows} mediaType="tv" />
 
             <Pagination
               currentPage={currentPage}
@@ -87,4 +82,4 @@ function ExploreMoviesPage() {
   );
 }
 
-export default ExploreMoviesPage;
+export default ExploreTvShowsPage;

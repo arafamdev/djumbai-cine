@@ -3,7 +3,8 @@ import { Link, NavLink } from "react-router-dom";
 
 const footerLinks = [
   { label: "Home", to: "/" },
-  { label: "Explore Movies", to: "/explore" },
+  { label: "Explore Movies", to: "/movies" },
+  { label: "Explore TV Shows", to: "/tv" },
 ];
 
 const socialLinks = [
