@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { Play } from "lucide-react";
 
 import BackdropPlaceholder from "../../../components/ui/BackdropPlaceholder";
+import CastSection from "../../../components/ui/CastSection";
 import ErrorState from "../../../components/ui/ErrorState";
 import PosterPlaceholder from "../../../components/ui/PosterPlaceholder";
 import Spinner from "../../../components/ui/Spinner";
@@ -11,9 +12,12 @@ import TrailerModal from "../../../components/ui/TrailerModal";
 import SimilarTvShows from "../components/SimilarTvShows";
 
 import {
+  getTvShowCredits,
   getTvShowDetails,
   getTvShowTrailer,
 } from "../../../services/tmdb/tvService";
+
+const HTTP_STATUS_NOT_FOUND = 404;
 
 function TvShowDetailsPage() {
   const { tvShowId } = useParams();
@@ -30,6 +34,11 @@ function TvShowDetailsPage() {
     trailer: null,
   });
 
+  const [castRequest, setCastRequest] = useState({
+    tvShowId: null,
+    castMembers: [],
+  });
+
   const [retryCount, setRetryCount] = useState(0);
   const [openTrailerTvShowId, setOpenTrailerTvShowId] = useState(null);
 
@@ -42,6 +51,9 @@ function TvShowDetailsPage() {
   const trailer =
     trailerRequest.tvShowId === tvShowId ? trailerRequest.trailer : null;
 
+  const castMembers =
+    castRequest.tvShowId === tvShowId ? castRequest.castMembers : [];
+
   function handleRetry() {
     setRequest({
       tvShowId,
@@ -53,6 +65,11 @@ function TvShowDetailsPage() {
     setTrailerRequest({
       tvShowId: null,
       trailer: null,
+    });
+
+    setCastRequest({
+      tvShowId: null,
+      castMembers: [],
     });
 
     setOpenTrailerTvShowId(null);
@@ -69,10 +86,13 @@ function TvShowDetailsPage() {
 
     async function loadTvShowDetails() {
       try {
-        const [detailsResult, trailerResult] = await Promise.allSettled([
-          getTvShowDetails(tvShowId),
-          getTvShowTrailer(tvShowId),
-        ]);
+        // Keep optional content failures separate from the main details.
+        const [detailsResult, trailerResult, castResult] =
+          await Promise.allSettled([
+            getTvShowDetails(tvShowId),
+            getTvShowTrailer(tvShowId),
+            getTvShowCredits(tvShowId),
+          ]);
 
         if (!isActive) return;
 
@@ -84,6 +104,12 @@ function TvShowDetailsPage() {
           tvShowId,
           trailer:
             trailerResult.status === "fulfilled" ? trailerResult.value : null,
+        });
+
+        setCastRequest({
+          tvShowId,
+          castMembers:
+            castResult.status === "fulfilled" ? castResult.value : [],
         });
 
         setRequest({
@@ -101,7 +127,7 @@ function TvShowDetailsPage() {
           error: {
             status: requestError.status,
             message:
-              requestError.status === 404
+              requestError.status === HTTP_STATUS_NOT_FOUND
                 ? "The TV show you're looking for doesn't exist."
                 : "We couldn't load this TV show. Please try again.",
           },
@@ -128,7 +154,7 @@ function TvShowDetailsPage() {
   if (error) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-background px-6 pt-20">
-        {error.status === 404 ? (
+        {error.status === HTTP_STATUS_NOT_FOUND ? (
           <ErrorState
             title="TV show not found"
             message={error.message}
@@ -181,17 +207,23 @@ function TvShowDetailsPage() {
       {/* TV show backdrop */}
       <section className="relative w-full overflow-hidden bg-background">
         {backdropUrl ? (
-          <img src={backdropUrl} alt="" className="block h-auto w-full" />
+          <img
+            src={backdropUrl}
+            alt=""
+            className="block h-72 w-full object-cover object-center sm:h-96 lg:h-170"
+          />
         ) : (
           <BackdropPlaceholder />
         )}
 
+        {/* Backdrop gradient */}
         <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-background via-background/20 to-transparent" />
       </section>
 
       {/* TV show information */}
       <section className="relative mx-auto -mt-28 max-w-7xl px-6 pb-20 md:-mt-40">
         <div className="grid gap-8 md:grid-cols-[240px_1fr]">
+          {/* TV show poster */}
           <div>
             {posterUrl ? (
               <img
@@ -204,6 +236,7 @@ function TvShowDetailsPage() {
             )}
           </div>
 
+          {/* TV show details */}
           <div className="space-y-5">
             <h1 className="text-3xl font-bold md:text-5xl">{tvShow.name}</h1>
 
@@ -226,7 +259,6 @@ function TvShowDetailsPage() {
               )}
             </div>
 
-            {/* Genres */}
             {genres && <p className="text-sm text-muted">{genres}</p>}
 
             {/* Seasons and episodes */}
@@ -256,7 +288,7 @@ function TvShowDetailsPage() {
               </button>
             )}
 
-            {/* Overview */}
+            {/* TV show overview */}
             <div className="max-w-3xl space-y-3">
               <h2 className="text-xl font-semibold">Overview</h2>
 
@@ -267,6 +299,9 @@ function TvShowDetailsPage() {
           </div>
         </div>
       </section>
+
+      {/* TV show cast */}
+      <CastSection castMembers={castMembers} />
 
       {/* Similar TV shows */}
       <SimilarTvShows tvShowId={tvShowId} />

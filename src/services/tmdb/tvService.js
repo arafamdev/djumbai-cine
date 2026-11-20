@@ -54,10 +54,19 @@ async function getSimilarTvShows(tvShowId) {
   return data.results;
 }
 
+async function getTvShowCredits(tvShowId) {
+  const endpoint = `/tv/${tvShowId}/credits?language=${DEFAULT_LANGUAGE}`;
+
+  const data = await tmdbClient(endpoint);
+
+  return data.cast;
+}
+
 export {
   getPopularTvShows,
   getTvShowDetails,
   getTvShowVideos,
   getTvShowTrailer,
   getSimilarTvShows,
+  getTvShowCredits
 };
