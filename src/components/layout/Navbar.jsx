@@ -2,7 +2,8 @@ import { NavLink } from "react-router-dom";
 
 const navigationLinks = [
   { label: "Home", href: "/" },
-  { label: "Explore", href: "/explore" },
+  { label: "Movies", href: "/movies" },
+  { label: "TV Shows", href: "/tv" },
 ];
 
 function Navbar({ mobile = false, onNavigate }) {
@@ -14,11 +15,11 @@ function Navbar({ mobile = false, onNavigate }) {
       <ul
         className={mobile ? "flex flex-col gap-2" : "flex items-center gap-7"}
       >
-        {navigationLinks.map((eachNavigationLink) => (
-          <li key={eachNavigationLink.href}>
+        {navigationLinks.map((navigationLink) => (
+          <li key={navigationLink.href}>
             <NavLink
-              to={eachNavigationLink.href}
-              end={eachNavigationLink.href === "/"}
+              to={navigationLink.href}
+              end={navigationLink.href === "/"}
               onClick={onNavigate}
               className={({ isActive }) =>
                 `block rounded-lg px-3 py-2 text-sm transition-colors hover:text-foreground ${
@@ -28,7 +29,7 @@ function Navbar({ mobile = false, onNavigate }) {
                 } ${mobile ? "hover:bg-elevated" : ""}`
               }
             >
-              {eachNavigationLink.label}
+              {navigationLink.label}
             </NavLink>
           </li>
         ))}

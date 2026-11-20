@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import MovieCard from "./MovieCard";
+import MediaCard from "./MediaCard";
 
-function MovieCarousel({ movies, title, titleId }) {
+function MediaCarousel({ movies, title, titleId, mediaType = "movie" }) {
   const carouselRef = useRef(null);
 
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -78,7 +78,7 @@ function MovieCarousel({ movies, title, titleId }) {
         </div>
       </div>
 
-      {/* Horizontal movie carousel */}
+      {/* Horizontal media carousel */}
       <div
         ref={carouselRef}
         onScroll={updateScrollButtons}
@@ -92,7 +92,7 @@ function MovieCarousel({ movies, title, titleId }) {
             key={movie.id}
             className="w-[calc((100%-1rem)/2)] shrink-0 snap-start sm:w-[calc((100%-2rem)/3)] lg:w-[calc((100%-4rem)/5)]"
           >
-            <MovieCard movie={movie} />
+            <MediaCard media={movie} mediaType={mediaType} />
           </div>
         ))}
       </div>
@@ -100,4 +100,4 @@ function MovieCarousel({ movies, title, titleId }) {
   );
 }
 
-export default MovieCarousel;
+export default MediaCarousel;
