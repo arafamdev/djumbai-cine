@@ -1,7 +1,8 @@
+import { NavLink } from "react-router-dom";
+
 const navigationLinks = [
   { label: "Home", href: "/" },
-  { label: "Explore", href: "#explore" },
-  { label: "Genres", href: "#genres" },
+  { label: "Explore", href: "/explore" },
 ];
 
 function Navbar({ mobile = false, onNavigate }) {
@@ -15,18 +16,20 @@ function Navbar({ mobile = false, onNavigate }) {
       >
         {navigationLinks.map((eachNavigationLink) => (
           <li key={eachNavigationLink.href}>
-            <a
-              href={eachNavigationLink.href}
+            <NavLink
+              to={eachNavigationLink.href}
+              end={eachNavigationLink.href === "/"}
               onClick={onNavigate}
-              aria-current={eachNavigationLink.href === "/" ? "page" : undefined}
-              className={`block rounded-lg px-3 py-2 text-sm transition-colors hover:text-foreground ${
-                eachNavigationLink.href === "/"
-                  ? "font-semibold text-foreground"
-                  : "font-medium text-muted"
-              } ${mobile ? "hover:bg-elevated" : ""}`}
+              className={({ isActive }) =>
+                `block rounded-lg px-3 py-2 text-sm transition-colors hover:text-foreground ${
+                  isActive
+                    ? "font-semibold text-foreground"
+                    : "font-medium text-muted"
+                } ${mobile ? "hover:bg-elevated" : ""}`
+              }
             >
               {eachNavigationLink.label}
-            </a>
+            </NavLink>
           </li>
         ))}
       </ul>

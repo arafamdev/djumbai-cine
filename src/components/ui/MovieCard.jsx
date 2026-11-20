@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import PosterPlaceholder from "../../../components/ui/PosterPlaceholder";
+import PosterPlaceholder from "./PosterPlaceholder";
 
 function MovieCard({ movie }) {
   const posterUrl = movie.poster_path
