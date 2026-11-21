@@ -12,6 +12,8 @@ import ScrollToTop from "./components/layout/ScrollToTop";
 import SearchResultsPage from "./features/search/pages/SearchResultsPage";
 import ExploreGenresPage from "./features/genres/pages/ExploreGenresPage";
 import GenreResultsPage from "./features/genres/pages/GenreResultsPage";
+import FavoritesPage from "./features/library/pages/FavoritesPage";
+import WatchlistPage from "./features/library/pages/WatchlistPage";
 
 function App() {
   return (
@@ -22,6 +24,10 @@ function App() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
+
+        {/* Personal library */}
+        <Route path="/favorites" element={<FavoritesPage />} />
+        <Route path="/watchlist" element={<WatchlistPage />} />
 
         {/* Movies */}
         <Route path="/movies" element={<ExploreMoviesPage />} />
