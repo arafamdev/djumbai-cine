@@ -1,5 +1,7 @@
 import { NavLink } from "react-router-dom";
 
+import GenresDropdown from "../../features/genres/components/GenresDropdown";
+
 const navigationLinks = [
   { label: "Home", href: "/" },
   { label: "Movies", href: "/movies" },
@@ -33,6 +35,10 @@ function Navbar({ mobile = false, onNavigate }) {
             </NavLink>
           </li>
         ))}
+
+        <li>
+          <GenresDropdown mobile={mobile} onNavigate={onNavigate} />
+        </li>
       </ul>
     </nav>
   );
