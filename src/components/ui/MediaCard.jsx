@@ -1,12 +1,17 @@
 import { Link } from "react-router-dom";
 
+import SaveButton from "../../features/library/components/SaveButton";
 import PosterPlaceholder from "./PosterPlaceholder";
 
 function MediaCard({ media, mediaType }) {
   const isTvShow = mediaType === "tv";
 
-  const title = isTvShow ? media.name : media.title;
-  const releaseDate = isTvShow ? media.first_air_date : media.release_date;
+  // Normalized TV shows use different field names from TMDB responses.
+  const title = isTvShow ? (media.name ?? media.title) : media.title;
+
+  const releaseDate = isTvShow
+    ? (media.first_air_date ?? media.release_date)
+    : media.release_date;
 
   const detailsPath = isTvShow ? `/tv/${media.id}` : `/movies/${media.id}`;
 
@@ -23,34 +28,56 @@ function MediaCard({ media, mediaType }) {
 
   return (
     <article className="group min-w-0">
+      <div className="relative">
+        <Link
+          to={detailsPath}
+          aria-label={`View details for ${title}`}
+          className="block rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+        >
+          <div className="aspect-2/3 overflow-hidden rounded-xl bg-elevated">
+            {posterUrl ? (
+              <img
+                src={posterUrl}
+                alt={`${title} poster`}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none"
+              />
+            ) : (
+              <PosterPlaceholder className="h-full w-full" />
+            )}
+          </div>
+        </Link>
+
+        {/* Keep buttons separate from the details link. */}
+        <div className="absolute right-2 top-2 z-10 flex flex-col gap-2 opacity-100 transition-[opacity,transform] duration-300 motion-reduce:transition-none sm:right-3 sm:top-3 [@media(hover:hover)]:translate-y-2 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:translate-y-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-focus-within:translate-y-0 [@media(hover:hover)]:group-focus-within:opacity-100">
+          <SaveButton
+            media={media}
+            mediaType={mediaType}
+            listType="favorites"
+            compact
+          />
+
+          <SaveButton
+            media={media}
+            mediaType={mediaType}
+            listType="watchlist"
+            compact
+          />
+        </div>
+      </div>
+
       <Link
         to={detailsPath}
-        aria-label={`View details for ${title}`}
-        className="block rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+        className="mt-3 block rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       >
-        <div className="aspect-2/3 overflow-hidden rounded-xl bg-elevated">
-          {posterUrl ? (
-            <img
-              src={posterUrl}
-              alt={`${title} poster`}
-              loading="lazy"
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-            />
-          ) : (
-            <PosterPlaceholder className="h-full w-full" />
-          )}
-        </div>
+        <h3 className="truncate text-sm font-semibold text-foreground transition-colors group-hover:text-primary">
+          {title}
+        </h3>
 
-        <div className="mt-3">
-          <h3 className="truncate text-sm font-semibold text-foreground transition-colors group-hover:text-primary">
-            {title}
-          </h3>
+        <div className="mt-1 flex items-center justify-between gap-2 text-xs text-muted">
+          <span>{releaseYear || "Unknown"}</span>
 
-          <div className="mt-1 flex items-center justify-between gap-2 text-xs text-muted">
-            <span>{releaseYear || "Unknown"}</span>
-
-            {rating && <span>★ {rating}</span>}
-          </div>
+          {rating && <span>★ {rating}</span>}
         </div>
       </Link>
     </article>

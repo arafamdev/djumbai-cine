@@ -9,6 +9,7 @@ import PosterPlaceholder from "../../../components/ui/PosterPlaceholder";
 import Spinner from "../../../components/ui/Spinner";
 import TrailerModal from "../../../components/ui/TrailerModal";
 
+import SaveButton from "../../library/components/SaveButton";
 import SimilarTvShows from "../components/SimilarTvShows";
 
 import {
@@ -274,6 +275,12 @@ function TvShowDetailsPage() {
                   {episodes} {episodes === 1 ? "Episode" : "Episodes"}
                 </span>
               )}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <SaveButton media={tvShow} mediaType="tv" listType="favorites" />
+
+              <SaveButton media={tvShow} mediaType="tv" listType="watchlist" />
             </div>
 
             {/* Trailer button */}

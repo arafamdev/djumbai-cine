@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 
 import GenresDropdown from "../../features/genres/components/GenresDropdown";
+import LibraryDropdown from "../../features/library/components/LibraryDropdown";
 
 const navigationLinks = [
   { label: "Home", href: "/" },
@@ -12,10 +13,10 @@ function Navbar({ mobile = false, onNavigate }) {
   return (
     <nav
       aria-label={mobile ? "Mobile navigation" : "Main navigation"}
-      className={mobile ? "md:hidden" : "hidden md:block"}
+      className={mobile ? "lg:hidden" : "hidden lg:block"}
     >
       <ul
-        className={mobile ? "flex flex-col gap-2" : "flex items-center gap-7"}
+        className={mobile ? "flex flex-col gap-2" : "flex items-center gap-5"}
       >
         {navigationLinks.map((navigationLink) => (
           <li key={navigationLink.href}>
@@ -24,7 +25,7 @@ function Navbar({ mobile = false, onNavigate }) {
               end={navigationLink.href === "/"}
               onClick={onNavigate}
               className={({ isActive }) =>
-                `block rounded-lg px-3 py-2 text-sm transition-colors hover:text-foreground ${
+                `block whitespace-nowrap rounded-lg px-3 py-2 text-sm transition-colors hover:text-foreground ${
                   isActive
                     ? "font-semibold text-foreground"
                     : "font-medium text-muted"
@@ -38,6 +39,10 @@ function Navbar({ mobile = false, onNavigate }) {
 
         <li>
           <GenresDropdown mobile={mobile} onNavigate={onNavigate} />
+        </li>
+
+        <li>
+          <LibraryDropdown mobile={mobile} onNavigate={onNavigate} />
         </li>
       </ul>
     </nav>

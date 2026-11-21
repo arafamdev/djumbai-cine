@@ -39,7 +39,7 @@ function Header() {
   useEffect(() => {
     if (!isMobileMenuOpen && !isSearchOpen) return;
 
-    // Close active panels with Escape and restore button focus.
+    // Close active panels with Escape and restore keyboard focus.
     function handleEscapeKey(event) {
       if (event.key !== "Escape") return;
 
@@ -62,7 +62,8 @@ function Header() {
   }, [isMobileMenuOpen, isSearchOpen]);
 
   useEffect(() => {
-    const desktopMediaQuery = window.matchMedia("(min-width: 768px)");
+    // Match the Tailwind lg breakpoint used by Navbar.
+    const desktopMediaQuery = window.matchMedia("(min-width: 1024px)");
 
     // Close the mobile menu when switching to desktop.
     function handleDesktopBreakpointChange(event) {
@@ -131,7 +132,7 @@ function Header() {
             aria-controls={searchPanelId}
           />
 
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <IconButton
               ref={mobileMenuButtonRef}
               icon={isMobileMenuOpen ? X : Menu}
@@ -167,11 +168,11 @@ function Header() {
         </div>
       </div>
 
-      {/* Mobile navigation panel */}
+      {/* Mobile and tablet navigation panel */}
       <div
         id={mobileMenuId}
         inert={!isMobileMenuOpen}
-        className={`absolute inset-x-0 top-full overflow-hidden bg-surface/95 shadow-xl transition-[opacity,transform,visibility] duration-200 ease-out motion-reduce:transition-none md:hidden ${
+        className={`absolute inset-x-0 top-full max-h-[calc(100dvh-4.5rem)] overflow-y-auto overscroll-contain border-b border-border bg-background/85 backdrop-blur-xl shadow-xl transition-[opacity,transform,visibility] duration-200 ease-out motion-reduce:transition-none lg:hidden ${
           isMobileMenuOpen
             ? "visible translate-y-0 opacity-100"
             : "invisible -translate-y-2 opacity-0"

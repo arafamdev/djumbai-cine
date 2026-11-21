@@ -9,6 +9,7 @@ import PosterPlaceholder from "../../../components/ui/PosterPlaceholder";
 import BackdropPlaceholder from "../../../components/ui/BackdropPlaceholder";
 import CastSection from "../../../components/ui/CastSection";
 import SimilarMovies from "../components/SimilarMovies";
+import SaveButton from "../../library/components/SaveButton";
 
 import {
   getMovieDetails,
@@ -258,6 +259,21 @@ function MovieDetailsPage() {
             </div>
 
             {genres && <p className="text-sm text-muted">{genres}</p>}
+
+            {/* Personal library actions */}
+            <div className="flex flex-wrap items-center gap-3">
+              <SaveButton
+                media={movie}
+                mediaType="movie"
+                listType="favorites"
+              />
+
+              <SaveButton
+                media={movie}
+                mediaType="movie"
+                listType="watchlist"
+              />
+            </div>
 
             {/* Trailer button */}
             {trailer && (
