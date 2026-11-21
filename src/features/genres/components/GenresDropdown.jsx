@@ -249,7 +249,7 @@ function GenresDropdown({ mobile = false, onNavigate }) {
               className="
                 grid max-h-72 grid-cols-2 gap-2
                 overflow-y-auto overscroll-contain pr-2
-                [scrollbar-width:thin]
+                scrollbar-thin
                 [scrollbar-color:#3f3f46_transparent]
                 hover:[scrollbar-color:#71717a_transparent]
                 [&::-webkit-scrollbar]:w-1
