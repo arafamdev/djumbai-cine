@@ -5,29 +5,51 @@ function ErrorState({
   message = "We couldn't load the content. Please try again.",
   onRetry,
   action,
+  compact = false,
 }) {
   return (
     <div
       role="alert"
-      className="flex flex-col items-center justify-center px-6 py-16 text-center"
+      className={`flex flex-col items-center justify-center text-center ${
+        compact ? "px-3 py-6" : "px-6 py-16"
+      }`}
     >
-      <AlertCircle aria-hidden="true" className="mb-5 size-12 text-primary" />
+      <AlertCircle
+        aria-hidden="true"
+        className={`text-primary ${compact ? "mb-3 size-7" : "mb-5 size-12"}`}
+      />
 
-      <h2 className="text-2xl font-bold text-foreground">{title}</h2>
+      <h2
+        className={`font-bold text-foreground ${
+          compact ? "text-sm" : "text-2xl"
+        }`}
+      >
+        {title}
+      </h2>
 
-      <p className="mt-3 max-w-md leading-7 text-muted">{message}</p>
+      <p
+        className={`max-w-md text-muted ${
+          compact ? "mt-2 text-xs leading-5" : "mt-3 leading-7"
+        }`}
+      >
+        {message}
+      </p>
 
       {onRetry && (
         <button
           type="button"
           onClick={onRetry}
-          className="mt-6 min-h-11 rounded-lg bg-primary px-6 py-3 font-semibold text-white transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          className={`rounded-lg bg-primary font-semibold text-white transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
+            compact
+              ? "mt-4 min-h-10 px-4 py-2 text-sm"
+              : "mt-6 min-h-11 px-6 py-3"
+          }`}
         >
           Try Again
         </button>
       )}
 
-      {action && <div className="mt-6">{action}</div>}
+      {action && <div className={compact ? "mt-4" : "mt-6"}>{action}</div>}
     </div>
   );
 }

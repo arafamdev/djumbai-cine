@@ -10,6 +10,8 @@ import ExploreTvShowsPage from "./features/tv/pages/ExploreTvShowsPage";
 import TvShowDetailsPage from "./features/tv/pages/TvShowDetailsPage";
 import ScrollToTop from "./components/layout/ScrollToTop";
 import SearchResultsPage from "./features/search/pages/SearchResultsPage";
+import ExploreGenresPage from "./features/genres/pages/ExploreGenresPage";
+import GenreResultsPage from "./features/genres/pages/GenreResultsPage";
 
 function App() {
   return (
@@ -20,11 +22,29 @@ function App() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
+
+        {/* Movies */}
         <Route path="/movies" element={<ExploreMoviesPage />} />
         <Route path="/movies/:movieId" element={<MovieDetailsPage />} />
+
+        {/* Tv Shows  */}
         <Route path="/tv" element={<ExploreTvShowsPage />} />
         <Route path="/tv/:tvShowId" element={<TvShowDetailsPage />} />
+
         <Route path="/search" element={<SearchResultsPage />} />
+
+        {/* Genres */}
+        <Route path="/genres" element={<ExploreGenresPage />} />
+        <Route
+          path="/genres/movies/:genreId"
+          element={<GenreResultsPage mediaType="movie" />}
+        />
+        <Route
+          path="/genres/tv/:genreId"
+          element={<GenreResultsPage mediaType="tv" />}
+        />
+
+        {/* Not found page */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
 
