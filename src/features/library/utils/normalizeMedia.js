@@ -20,14 +20,16 @@ export function normalizeMedia(media, mediaType) {
     return null;
   }
 
+  const releaseDate = isTvShow
+    ? (media.first_air_date ?? media.release_date)
+    : media.release_date;
+
   return {
     id: media.id,
     mediaType,
     title: title.trim(),
-    poster_path: media.poster_path ?? null,
-    release_date: isTvShow
-      ? (media.first_air_date ?? media.release_date ?? null)
-      : (media.release_date ?? null),
+    poster_path: typeof media.poster_path === "string" ? media.poster_path : null,
+    release_date: typeof releaseDate === "string" ? releaseDate : null,
     vote_average: Number.isFinite(media.vote_average)
       ? media.vote_average
       : null,

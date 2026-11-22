@@ -94,3 +94,14 @@ test("suggestions debounce, wrap keyboard selection, and navigate on Enter", asy
   expect(screen.getByLabelText("Current URL")).toHaveTextContent("/movies/603");
   expect(complete).toHaveBeenCalledOnce();
 });
+
+test("combobox only references an available listbox while suggestions load or are empty", async () => {
+  const user = userEvent.setup();
+  render(<MemoryRouter><SearchForm isSearchOpen /></MemoryRouter>);
+  const input = screen.getByRole("combobox");
+  await user.type(input, "missing");
+  expect(input).toHaveAttribute("aria-expanded", "false");
+  expect(input).not.toHaveAttribute("aria-controls");
+  await screen.findByText("No suggestions found.");
+  expect(input).not.toHaveAttribute("aria-controls");
+});

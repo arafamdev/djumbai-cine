@@ -73,3 +73,12 @@ test("library filters distinguish movies and TV with the same ID", async () => {
   expect(screen.getByRole("link", { name: "View details for Show" })).toHaveAttribute("href", "/tv/1");
   expect(screen.queryByText("Movie")).not.toBeInTheDocument();
 });
+
+test("malformed optional fields in storage cannot crash library cards", () => {
+  const invalidFields = { ...movie, mediaType: "movie", release_date: {}, poster_path: { path: "/poster.jpg" } };
+  localStorage.setItem(key, JSON.stringify({ favorites: [invalidFields], watchlist: [] }));
+  expect(readLibrary().favorites[0]).toMatchObject({ release_date: null, poster_path: null });
+  render(<MemoryRouter><LibraryProvider><FavoritesPage /></LibraryProvider></MemoryRouter>);
+  expect(screen.getByText("Movie")).toBeInTheDocument();
+  expect(screen.getByText("Unknown")).toBeInTheDocument();
+});
