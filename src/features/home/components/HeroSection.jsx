@@ -12,7 +12,7 @@ import {
   getTrendingMovies,
 } from "../../../services/tmdb/movieService";
 
-const imageBaseUrl = "https://image.tmdb.org/t/p/original";
+const imageBaseUrl = "https://image.tmdb.org/t/p/w1280";
 
 function HeroSection() {
   const [featuredMovie, setFeaturedMovie] = useState(null);
@@ -118,10 +118,13 @@ function HeroSection() {
     >
       {/* Background image */}
       {backdropUrl && (
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat lg:bg-[position:center_18%]"
-          style={{ backgroundImage: `url("${backdropUrl}")` }}
+        <img
+          src={backdropUrl}
+          srcSet={`https://image.tmdb.org/t/p/w780${featuredMovie.backdrop_path} 780w, ${backdropUrl} 1280w`}
+          sizes="100vw"
+          alt=""
+          fetchPriority="high"
+          className="absolute inset-0 -z-10 h-full w-full object-cover object-center lg:object-[center_18%]"
         />
       )}
 

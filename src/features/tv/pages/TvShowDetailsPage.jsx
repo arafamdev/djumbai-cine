@@ -181,7 +181,7 @@ function TvShowDetailsPage() {
   }
 
   const backdropUrl = tvShow.backdrop_path
-    ? `https://image.tmdb.org/t/p/original${tvShow.backdrop_path}`
+    ? `https://image.tmdb.org/t/p/w1280${tvShow.backdrop_path}`
     : null;
 
   const posterUrl = tvShow.poster_path
@@ -207,6 +207,8 @@ function TvShowDetailsPage() {
         {backdropUrl ? (
           <img
             src={backdropUrl}
+            srcSet={`https://image.tmdb.org/t/p/w780${tvShow.backdrop_path} 780w, ${backdropUrl} 1280w`}
+            sizes="100vw"
             alt=""
             className="block h-72 w-full object-cover object-center sm:h-96 lg:h-170"
           />
@@ -226,6 +228,8 @@ function TvShowDetailsPage() {
             {posterUrl ? (
               <img
                 src={posterUrl}
+                width="500"
+                height="750"
                 alt={`${tvShow.name} poster`}
                 className="w-36 rounded-xl shadow-2xl sm:w-44 md:w-full"
               />
