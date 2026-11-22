@@ -50,7 +50,7 @@ cd djumbai-cine
 npm ci
 ```
 
-Create a `.env.local` file in the project root and add your [TMDB API Read Access Token](https://www.themoviedb.org/settings/api):
+Copy `.env.example` to `.env.local` in the project root and add your [TMDB API Read Access Token](https://www.themoviedb.org/settings/api):
 
 ```env
 TMDB_ACCESS_TOKEN=your_tmdb_read_access_token
@@ -62,7 +62,7 @@ Start the development server:
 npm run dev
 ```
 
-**Note:** API credentials are kept outside the frontend code. Production requests are handled through a Vercel serverless proxy.
+**Production:** configure `TMDB_ACCESS_TOKEN` in the Vercel project environment. Never prefix this secret with `VITE_`. Production requests use a same-origin serverless proxy with an endpoint allowlist and a request timeout; the Vite development server uses a local proxy.
 
 ## Validation
 
@@ -75,11 +75,11 @@ npm audit
 
 `npm run test:watch` runs Vitest in watch mode. Tests cover search interactions and pagination, library persistence and storage failures, media normalization, TMDB services, and the serverless proxy. GitHub Actions runs the same checks on pull requests and pushes to `main`. API tests use mocked responses and require no token.
 
-## 🗺️ Future Improvements
+## Architecture and scope
 
-- Advanced filtering and sorting.
-- Actor and director profiles.
-- Performance and accessibility improvements.
+Code is organized by feature, with reusable UI components, hooks, and TMDB services. Header panel state is shared through props; the personal library uses Context API. Non-home routes load on demand with accessible loading and recovery states. Images use responsive TMDB sizes, and carousel scrolling respects reduced-motion preferences.
+
+Favorites and watchlist are stored only in the current browser. There is no account or cross-device synchronization. Movie data and trailer availability depend on TMDB and YouTube. Automated tests mock these services; manual browser validation complements them.
 
 ## 🎞️ Attribution
 
