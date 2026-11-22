@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef } from "react";
 import { Menu, Search, X } from "lucide-react";
 
 import SearchForm from "../../features/search/components/SearchForm";
@@ -6,9 +6,9 @@ import IconButton from "../ui/IconButton";
 import Logo from "../ui/Logo";
 import Navbar from "./Navbar";
 
-function Header() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
+function Header({ activePanel, onPanelChange }) {
+  const isMobileMenuOpen = activePanel === "menu";
+  const isSearchOpen = activePanel === "search";
 
   const mobileMenuId = useId();
   const searchPanelId = useId();
@@ -18,22 +18,23 @@ function Header() {
   const searchContentRef = useRef(null);
 
   function toggleMobileMenu() {
-    // Keep only one panel open at a time.
-    setIsSearchOpen(false);
-    setIsMobileMenuOpen((previousState) => !previousState);
+    onPanelChange((previousPanel) =>
+      previousPanel === "menu" ? null : "menu",
+    );
   }
 
   function closeMobileMenu() {
-    setIsMobileMenuOpen(false);
+    onPanelChange(null);
   }
 
   function toggleSearch() {
-    setIsMobileMenuOpen(false);
-    setIsSearchOpen((previousState) => !previousState);
+    onPanelChange((previousPanel) =>
+      previousPanel === "search" ? null : "search",
+    );
   }
 
   function closeSearch() {
-    setIsSearchOpen(false);
+    onPanelChange(null);
   }
 
   useEffect(() => {
@@ -44,12 +45,12 @@ function Header() {
       if (event.key !== "Escape") return;
 
       if (isSearchOpen) {
-        closeSearch();
+        onPanelChange(null);
         searchButtonRef.current?.focus();
       }
 
       if (isMobileMenuOpen) {
-        closeMobileMenu();
+        onPanelChange(null);
         mobileMenuButtonRef.current?.focus();
       }
     }
@@ -59,7 +60,7 @@ function Header() {
     return () => {
       window.removeEventListener("keydown", handleEscapeKey);
     };
-  }, [isMobileMenuOpen, isSearchOpen]);
+  }, [isMobileMenuOpen, isSearchOpen, onPanelChange]);
 
   useEffect(() => {
     // Match the Tailwind lg breakpoint used by Navbar.
@@ -68,7 +69,9 @@ function Header() {
     // Close the mobile menu when switching to desktop.
     function handleDesktopBreakpointChange(event) {
       if (event.matches) {
-        setIsMobileMenuOpen(false);
+        onPanelChange((previousPanel) =>
+          previousPanel === "menu" ? null : previousPanel,
+        );
       }
     }
 
@@ -80,7 +83,7 @@ function Header() {
         handleDesktopBreakpointChange,
       );
     };
-  }, []);
+  }, [onPanelChange]);
 
   useEffect(() => {
     if (!isSearchOpen) return;
@@ -99,7 +102,7 @@ function Header() {
         return;
       }
 
-      closeSearch();
+      onPanelChange(null);
     }
 
     document.addEventListener("pointerdown", handlePointerDownOutsideSearch);
@@ -110,7 +113,7 @@ function Header() {
         handlePointerDownOutsideSearch,
       );
     };
-  }, [isSearchOpen]);
+  }, [isSearchOpen, onPanelChange]);
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-background/80 backdrop-blur-xl">
@@ -149,7 +152,7 @@ function Header() {
       <div
         id={searchPanelId}
         inert={!isSearchOpen}
-        className={`pointer-events-none absolute inset-x-0 top-full transition-[opacity,transform,visibility] duration-200 ease-out motion-reduce:transition-none ${
+        className={`pointer-events-none absolute inset-x-0 top-full transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none ${
           isSearchOpen
             ? "visible translate-y-0 opacity-100"
             : "invisible -translate-y-2 opacity-0"

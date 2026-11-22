@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import Footer from "./components/layout/Footer";
@@ -16,11 +17,20 @@ import FavoritesPage from "./features/library/pages/FavoritesPage";
 import WatchlistPage from "./features/library/pages/WatchlistPage";
 
 function App() {
+  const [activeHeaderPanel, setActiveHeaderPanel] = useState(null);
+
+  function openSearch() {
+    setActiveHeaderPanel("search");
+  }
+
   return (
     <>
       <ScrollToTop />
 
-      <Header />
+      <Header
+        activePanel={activeHeaderPanel}
+        onPanelChange={setActiveHeaderPanel}
+      />
 
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -37,7 +47,10 @@ function App() {
         <Route path="/tv" element={<ExploreTvShowsPage />} />
         <Route path="/tv/:tvShowId" element={<TvShowDetailsPage />} />
 
-        <Route path="/search" element={<SearchResultsPage />} />
+        <Route
+          path="/search"
+          element={<SearchResultsPage onTryAgain={openSearch} />}
+        />
 
         {/* Genres */}
         <Route path="/genres" element={<ExploreGenresPage />} />

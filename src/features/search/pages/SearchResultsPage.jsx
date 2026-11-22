@@ -9,7 +9,7 @@ import SearchEmptyState from "../components/SearchEmptyState";
 const MIN_PAGE = 1;
 const MAX_TMDB_PAGE = 500;
 
-function SearchResultsPage() {
+function SearchResultsPage({ onTryAgain }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Read the search query and requested page from the URL.
@@ -89,11 +89,7 @@ function SearchResultsPage() {
           !isLoading &&
           !searchError &&
           searchResults.length === 0 && (
-            <SearchEmptyState
-              onTryAgain={() => {
-                // The search panel will be connected in the next step.
-              }}
-            />
+            <SearchEmptyState onTryAgain={onTryAgain} />
           )}
 
         {/* Search results and pagination */}
