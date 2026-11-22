@@ -166,8 +166,8 @@ function SearchForm({ isSearchOpen, onSearchComplete }) {
           placeholder="Search movies and TV shows..."
           autoComplete="off"
           aria-autocomplete="list"
-          aria-controls={shouldShowSuggestions ? suggestionsId : undefined}
-          aria-expanded={shouldShowSuggestions && !searchError}
+          aria-controls={areSuggestionsAvailable ? suggestionsId : undefined}
+          aria-expanded={areSuggestionsAvailable}
           aria-activedescendant={activeSuggestionId}
           className="min-w-0 flex-1 rounded-lg border border-white/10 bg-surface px-4 py-3 text-sm text-foreground outline-none placeholder:text-muted focus-visible:border-primary"
         />
