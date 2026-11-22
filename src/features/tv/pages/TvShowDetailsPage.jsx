@@ -87,35 +87,13 @@ function TvShowDetailsPage() {
 
     async function loadTvShowDetails() {
       try {
-        // Keep optional content failures separate from the main details.
-        const [detailsResult, trailerResult, castResult] =
-          await Promise.allSettled([
-            getTvShowDetails(tvShowId),
-            getTvShowTrailer(tvShowId),
-            getTvShowCredits(tvShowId),
-          ]);
+        const details = await getTvShowDetails(tvShowId);
 
         if (!isActive) return;
 
-        if (detailsResult.status === "rejected") {
-          throw detailsResult.reason;
-        }
-
-        setTrailerRequest({
-          tvShowId,
-          trailer:
-            trailerResult.status === "fulfilled" ? trailerResult.value : null,
-        });
-
-        setCastRequest({
-          tvShowId,
-          castMembers:
-            castResult.status === "fulfilled" ? castResult.value : [],
-        });
-
         setRequest({
           tvShowId,
-          tvShow: detailsResult.value,
+          tvShow: details,
           error: null,
           isLoading: false,
         });
@@ -137,7 +115,26 @@ function TvShowDetailsPage() {
       }
     }
 
+    async function loadOptionalContent() {
+      const [trailerResult, castResult] = await Promise.allSettled([
+        getTvShowTrailer(tvShowId),
+        getTvShowCredits(tvShowId),
+      ]);
+
+      if (!isActive) return;
+
+      setTrailerRequest({
+        tvShowId,
+        trailer: trailerResult.status === "fulfilled" ? trailerResult.value : null,
+      });
+      setCastRequest({
+        tvShowId,
+        castMembers: castResult.status === "fulfilled" ? castResult.value : [],
+      });
+    }
+
     loadTvShowDetails();
+    loadOptionalContent();
 
     return () => {
       isActive = false;
