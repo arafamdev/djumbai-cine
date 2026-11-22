@@ -38,16 +38,16 @@ Discover movies and TV shows, explore trending titles, watch trailers, and organ
 
 **API & Deployment:** TMDB API · Vercel Serverless Functions · Vercel
 
-**Tools:** Git · GitHub · ESLint · Lucide React · React Toastify
+**Tools:** Git · GitHub Actions · ESLint · Vitest · React Testing Library · Lucide React · React Toastify
 
 ## 🚀 Getting Started
 
-Clone the repository and install dependencies:
+Use Node.js 24 or later. Clone the repository and install dependencies:
 
 ```bash
 git clone https://github.com/arafamdev/djumbai-cine.git
 cd djumbai-cine
-npm install
+npm ci
 ```
 
 Create a `.env.local` file in the project root and add your [TMDB API Read Access Token](https://www.themoviedb.org/settings/api):
@@ -64,9 +64,19 @@ npm run dev
 
 **Note:** API credentials are kept outside the frontend code. Production requests are handled through a Vercel serverless proxy.
 
+## Validation
+
+```bash
+npm run lint
+npm test
+npm run build
+npm audit
+```
+
+`npm run test:watch` runs Vitest in watch mode. Tests cover search interactions and pagination, library persistence and storage failures, media normalization, TMDB services, and the serverless proxy. GitHub Actions runs the same checks on pull requests and pushes to `main`. API tests use mocked responses and require no token.
+
 ## 🗺️ Future Improvements
 
-- Automated testing with Vitest and React Testing Library.
 - Advanced filtering and sorting.
 - Actor and director profiles.
 - Performance and accessibility improvements.
