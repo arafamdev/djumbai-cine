@@ -16,7 +16,7 @@ function MediaCard({ media, mediaType }) {
   const detailsPath = isTvShow ? `/tv/${media.id}` : `/movies/${media.id}`;
 
   const posterUrl = media.poster_path
-    ? `https://image.tmdb.org/t/p/w500${media.poster_path}`
+    ? `https://image.tmdb.org/t/p/w342${media.poster_path}`
     : null;
 
   const releaseYear = releaseDate?.slice(0, 4);
@@ -38,6 +38,11 @@ function MediaCard({ media, mediaType }) {
             {posterUrl ? (
               <img
                 src={posterUrl}
+                srcSet={`https://image.tmdb.org/t/p/w185${media.poster_path} 185w, ${posterUrl} 342w, https://image.tmdb.org/t/p/w500${media.poster_path} 500w`}
+                sizes="(min-width: 1280px) 240px, (min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
+                width="342"
+                height="513"
+                decoding="async"
                 alt={`${title} poster`}
                 loading="lazy"
                 className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none"
