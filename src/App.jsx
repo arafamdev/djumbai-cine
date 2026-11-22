@@ -56,7 +56,7 @@ function App() {
         onPanelChange={setActiveHeaderPanel}
       />
 
-      <RouteErrorBoundary key={location.key}>
+      <RouteErrorBoundary key={location.pathname}>
         <Suspense
           fallback={
             <main className="flex min-h-screen items-center justify-center bg-background pt-20">
