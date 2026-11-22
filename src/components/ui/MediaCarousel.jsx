@@ -40,7 +40,9 @@ function MediaCarousel({ movies, title, titleId, mediaType = "movie" }) {
 
     carousel.scrollBy({
       left: direction * carousel.clientWidth * 0.8,
-      behavior: "smooth",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
     });
   }
 
@@ -85,7 +87,7 @@ function MediaCarousel({ movies, title, titleId, mediaType = "movie" }) {
         tabIndex={0}
         role="region"
         aria-label={`${title} carousel`}
-        className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-4 focus-visible:outline-2 focus-visible:outline-primary [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth motion-reduce:scroll-auto pb-4 focus-visible:outline-2 focus-visible:outline-primary [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {movies.map((movie) => (
           <div

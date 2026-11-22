@@ -58,7 +58,9 @@ function CastSection({ castMembers }) {
 
     castCarouselElement.scrollBy({
       left: direction * scrollDistance,
-      behavior: "smooth",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
     });
   }
 
@@ -115,7 +117,7 @@ function CastSection({ castMembers }) {
         tabIndex={0}
         role="region"
         aria-label="Top cast carousel"
-        className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-4 focus-visible:outline-2 focus-visible:outline-primary [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth motion-reduce:scroll-auto pb-4 focus-visible:outline-2 focus-visible:outline-primary [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {castMembers.map((castMember) => (
           <div
