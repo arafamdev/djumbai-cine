@@ -12,7 +12,7 @@ for (const reducedMotion of [false, true]) {
       ? <MediaCarousel movies={[{ id: 1, title: "Movie" }]} title="Movies" titleId="movies" />
       : <CastSection castMembers={[{ id: 1, name: "Actor" }]} />
     }</LibraryProvider></MemoryRouter>);
-    const carousel = screen.getByRole("region");
+    const carousel = screen.getByRole("region", { name: /carousel$/ });
     Object.defineProperties(carousel, {
       clientWidth: { value: 500 },
       scrollWidth: { value: 1000 },
