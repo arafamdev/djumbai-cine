@@ -87,35 +87,13 @@ function MovieDetailsPage() {
 
     async function loadMovieDetails() {
       try {
-        // Load optional content without blocking the movie details.
-        const [movieResult, trailerResult, castResult] =
-          await Promise.allSettled([
-            getMovieDetails(movieId),
-            getMovieTrailer(movieId),
-            getMovieCredits(movieId),
-          ]);
+        const details = await getMovieDetails(movieId);
 
         if (!isActive) return;
 
-        if (movieResult.status === "rejected") {
-          throw movieResult.reason;
-        }
-
-        setTrailerRequest({
-          movieId,
-          trailer:
-            trailerResult.status === "fulfilled" ? trailerResult.value : null,
-        });
-
-        setCastRequest({
-          movieId,
-          castMembers:
-            castResult.status === "fulfilled" ? castResult.value : [],
-        });
-
         setRequest({
           movieId,
-          movie: movieResult.value,
+          movie: details,
           error: null,
           isLoading: false,
         });
@@ -137,7 +115,26 @@ function MovieDetailsPage() {
       }
     }
 
+    async function loadOptionalContent() {
+      const [trailerResult, castResult] = await Promise.allSettled([
+        getMovieTrailer(movieId),
+        getMovieCredits(movieId),
+      ]);
+
+      if (!isActive) return;
+
+      setTrailerRequest({
+        movieId,
+        trailer: trailerResult.status === "fulfilled" ? trailerResult.value : null,
+      });
+      setCastRequest({
+        movieId,
+        castMembers: castResult.status === "fulfilled" ? castResult.value : [],
+      });
+    }
+
     loadMovieDetails();
+    loadOptionalContent();
 
     return () => {
       isActive = false;
